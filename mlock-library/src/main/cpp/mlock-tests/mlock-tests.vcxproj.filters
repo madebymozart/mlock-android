@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Test">
+      <UniqueIdentifier>{e554fd00-864e-4946-b7ec-370336cbf523}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="mlock_tests.cxx">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="msha2_test.cxx">
+      <Filter>Test</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
