@@ -27,16 +27,16 @@ import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import javax.crypto.KeyGenerator;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
+import javax.crypto.SecretKey;
+import java.security.*;
+import java.util.Objects;
 import java.util.logging.Level;
 
 @TargetApi(Build.VERSION_CODES.M)
-final class MLockKeyStoreSymmetric extends MLockKeyStore {
+final class MLockKeyStoreSymmetric extends MLockKeyStore<SecretKey> {
 
     // Class Constants
     private static final String TAG = MLockKeyStoreSymmetric.class.getSimpleName();
@@ -52,7 +52,7 @@ final class MLockKeyStoreSymmetric extends MLockKeyStore {
      * @see MLockKeyStore#generateKey(String)
      */
     @Override
-    public final Key generateKey(@NonNull String alias) {
+    public final SecretKey generateKey(@NonNull String alias) {
         try {
             final KeyGenerator keyGenerator =
                     KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE);
@@ -68,5 +68,19 @@ final class MLockKeyStoreSymmetric extends MLockKeyStore {
             logger.log(Level.WARNING, "Could not generate symmetric key: " + e.getMessage());
             return null;
         }
+    }
+
+    /**
+     * @see MLockKeyStore#getKey(String)
+     */
+    @Nullable
+    @Override
+    public SecretKey getKey(@NonNull String alias) {
+        try {
+            return (SecretKey) Objects.requireNonNull(getKeyStore()).getKey(alias, null);
+        } catch (UnrecoverableKeyException | NoSuchAlgorithmException | KeyStoreException e) {
+            logger.log(Level.WARNING, "Could not get key " + alias + " from the KeyStore: " + e.getMessage());
+        }
+        return null;
     }
 }

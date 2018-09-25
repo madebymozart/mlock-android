@@ -20,7 +20,7 @@
   SOFTWARE.
  */
 
-package com.prodbymozat.mlock.secure;
+package com.prodbymozat.mlock.cipher;
 
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -31,14 +31,16 @@ import javax.crypto.spec.IvParameterSpec;
 import java.security.Key;
 import java.util.logging.Logger;
 
-public abstract class MLockCipher {
+public abstract class MLockCipher<T> {
 
-    protected static final String UTF_8 = "UTF-8";
-    protected static final String IV_SEPARATOR = "]";
+    // Class Constants
+    static final int GCM_SPEC_LENGTH = 128;
+    static final String UTF_8 = "UTF-8";
+    static final String IV_SEPARATOR = "]";
 
     // Class Ciphers
-    protected static final String SYMMETRIC_CIPHER = "AES/GCM/NoPadding";
-    protected static final String ASYMMETRIC_CIPHER = "RSA/ECB/PKCS1Padding";
+    static final String SYMMETRIC_CIPHER = "AES/GCM/NoPadding";
+    static final String ASYMMETRIC_CIPHER = "RSA/ECB/PKCS1Padding";
 
     /**
      * Class Logger
@@ -55,12 +57,12 @@ public abstract class MLockCipher {
 
     /**
      * Create a new instance of the {@link MLockCipher} based on the API version. If the target platform is less than
-     * API 23, it will create , otherwise it will create and instance of {@link MLockSymmetricCipher}
+     * API 23, it will create , otherwise it will create and instance of {@link MLockCipherSymmetric}
      *
      * @apiNote This is not a singleton, this will return a new object every time it is called.
      */
     public static MLockCipher getInstance() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? new MLockSymmetricCipher() : new MLockAsymmetricCipher();
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? new MLockCipherSymmetric() : new MLockCipherAsymmetric();
     }
 
     /**
@@ -70,10 +72,10 @@ public abstract class MLockCipher {
      * key inside so it will be returned in this format <iv key>]<encrypted data>
      */
     @Nullable
-    abstract String encrypt(@NonNull Key key, @NonNull String data);
+    abstract String encrypt(@NonNull T key, @NonNull String data);
 
     /**
-     * Decrypts data that was encrypted by {@link MLockCipher#encrypt(Key, String)}.
+     * Decrypts data that was encrypted by {@link MLockCipher#encrypt(T, String)}.
      * Data should contain key inside in this format <iv key>]<encrypted data>. This is critical
      * as the {@link IvParameterSpec} will need it to properly initialize the {@link Cipher} in
      * {@link Cipher#DECRYPT_MODE}
@@ -82,5 +84,5 @@ public abstract class MLockCipher {
      * @return decrypted data or null if any error occur.
      */
     @Nullable
-    abstract String decrypt(@NonNull Key key, @NonNull String data);
+    abstract String decrypt(@NonNull T key, @NonNull String data);
 }

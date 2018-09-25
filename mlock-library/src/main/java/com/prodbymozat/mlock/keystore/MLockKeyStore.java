@@ -28,18 +28,20 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.io.IOException;
-import java.security.*;
+import java.security.Key;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.Enumeration;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class MLockKeyStore {
+public abstract class MLockKeyStore<T> {
 
     // Class Constants
     static final String ANDROID_KEY_STORE = "AndroidKeyStore";
-
 
     /**
      * Class Logger
@@ -66,27 +68,20 @@ public abstract class MLockKeyStore {
     }
 
     /**
-     * Generates a {@link Key} and stores it in the AndroidKeyStore using the given alias.
+     * Generates a {@link T} and stores it in the AndroidKeyStore using the given alias.
      *
      * @return {@link Key} or null if any error occurs.
      */
-    public abstract Key generateKey(@NonNull String alias);
+    public abstract T generateKey(@NonNull String alias);
 
     /**
      * Gets a key from the {@link KeyStore} using the given alias
      *
      * @param alias Name of the key
-     * @return {@link Key from the {@link KeyStore}, otherwise null.
+     * @return {@link T from the {@link KeyStore}, otherwise null.
      */
     @Nullable
-    public final Key getKey(@NonNull String alias) {
-        try {
-            return Objects.requireNonNull(getKeyStore()).getKey(alias, null);
-        } catch (UnrecoverableKeyException | NoSuchAlgorithmException | KeyStoreException e) {
-            logger.log(Level.WARNING, "Could not get key " + alias + " from the KeyStore: " + e.getMessage());
-        }
-        return null;
-    }
+    public abstract T getKey(@NonNull String alias);
 
     /**
      * Checks the {@link KeyStore} for a key using the given alias.

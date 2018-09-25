@@ -20,7 +20,7 @@
   SOFTWARE.
  */
 
-package com.prodbymozat.mlock.secure;
+package com.prodbymozat.mlock.cipher;
 
 import android.annotation.TargetApi;
 import android.os.Build;
@@ -33,41 +33,38 @@ import javax.crypto.spec.GCMParameterSpec;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 
 @TargetApi(Build.VERSION_CODES.M)
-final class MLockSymmetricCipher extends MLockCipher {
+final class MLockCipherSymmetric extends MLockCipher<SecretKey> {
 
     // Class Constants
-    private static final String TAG = MLockSymmetricCipher.class.getSimpleName();
+    private static final String TAG = MLockCipherSymmetric.class.getSimpleName();
 
     /**
      * Constructor.
      */
-    MLockSymmetricCipher() {
+    MLockCipherSymmetric() {
         super(TAG);
     }
 
     /**
-     * @see MLockCipher#encrypt(Key, String)
+     * @see MLockCipher#encrypt(Object, String)
      */
     @Override
     @Nullable
-    final String encrypt(@NonNull Key key, @NonNull String data) {
+    final String encrypt(@NonNull SecretKey key, @NonNull String data) {
         try {
             // Initialize Cipher in encryption mode with the secret key.
-            final SecretKey secretKey = (SecretKey) key;
             final Cipher cipher = Cipher.getInstance(SYMMETRIC_CIPHER);
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            cipher.init(Cipher.ENCRYPT_MODE, key);
 
             // Create Base64 encoded IV
             final String iv = Base64.encodeToString(cipher.getIV(), Base64.DEFAULT);
 
             // Encrypt String and encode to Base64
-            final String encryptedString =
-                    Base64.encodeToString(cipher.doFinal(data.getBytes(UTF_8)), Base64.DEFAULT);
+            final String encryptedString = Base64.encodeToString(cipher.doFinal(data.getBytes(UTF_8)), Base64.DEFAULT);
 
             // Create full encrypted string.
             return iv + IV_SEPARATOR + encryptedString;
@@ -80,11 +77,11 @@ final class MLockSymmetricCipher extends MLockCipher {
     }
 
     /**
-     * @see MLockCipher#decrypt(Key, String)
+     * @see MLockCipher#decrypt(Object, String)
      */
     @Override
     @Nullable
-    final String decrypt(@NonNull Key key, @NonNull String data) {
+    final String decrypt(@NonNull SecretKey key, @NonNull String data) {
         try {
             // Splitting the iv from the encoded data.
             final String[] split = data.split(IV_SEPARATOR);
@@ -92,11 +89,10 @@ final class MLockSymmetricCipher extends MLockCipher {
             final String encryptedString = split[1];
 
             // Initializing Cipher in Decrypt mode with IvParameterSpec.
-            final SecretKey secretKey = (SecretKey) key;
             final Cipher cipher = Cipher.getInstance(SYMMETRIC_CIPHER);
             final GCMParameterSpec parameterSpec =
-                    new GCMParameterSpec(128, Base64.decode(ivString, Base64.DEFAULT));
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, parameterSpec);
+                    new GCMParameterSpec(GCM_SPEC_LENGTH, Base64.decode(ivString, Base64.DEFAULT));
+            cipher.init(Cipher.DECRYPT_MODE, key, parameterSpec);
 
             // Decode the encrypted string to a byte array.
             final byte[] decodedData =

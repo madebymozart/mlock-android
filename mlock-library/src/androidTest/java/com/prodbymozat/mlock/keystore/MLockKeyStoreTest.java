@@ -26,7 +26,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.security.Key;
 import java.security.KeyStoreException;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -55,7 +54,7 @@ public class MLockKeyStoreTest {
     @Test
     public void generateKey_SecretKeyIsNotNull() {
         // Act
-        final Key key = mLockKeyStore.generateKey(TEST_ALIAS);
+        final Object key = mLockKeyStore.generateKey(TEST_ALIAS);
 
         // Asset
         assertNotNull(key);
@@ -64,7 +63,7 @@ public class MLockKeyStoreTest {
     @Test
     public void getKey_shouldReturnNullIfNoKeyHasBeenGenerated() {
         // Act
-        final Key symmetricKey = mLockKeyStore.getKey(TEST_ALIAS);
+        final Object symmetricKey = mLockKeyStore.getKey(TEST_ALIAS);
 
         // Asset
         assertNull(symmetricKey);
@@ -76,7 +75,7 @@ public class MLockKeyStoreTest {
         mLockKeyStore.generateKey(TEST_ALIAS);
 
         // Act
-        final Key generatedKey = mLockKeyStore.getKey(TEST_ALIAS);
+        final Object generatedKey = mLockKeyStore.getKey(TEST_ALIAS);
 
         // Assert
         assertNotNull(generatedKey);
@@ -89,12 +88,12 @@ public class MLockKeyStoreTest {
         final MLockKeyStore mLockKeyStore2 = MLockKeyStore.getInstance(getInstrumentation().getContext());
 
         // Act
-        final Key generatedKey = mLockKeyStore.getKey(TEST_ALIAS);
-        final Key generatedKey2 = mLockKeyStore2.getKey(TEST_ALIAS);
+        final Object generatedKey = mLockKeyStore.getKey(TEST_ALIAS);
+        final Object generatedKey2 = mLockKeyStore2.getKey(TEST_ALIAS);
 
-        // Assert
+        // Assert, using string representation since Asymmetric keys Objects can't be directly compared to each other
         assertNotSame(mLockKeyStore, mLockKeyStore2);
-        assertEquals(generatedKey, generatedKey2);
+        assertEquals(generatedKey.toString(), generatedKey2.toString());
     }
 
     @Test

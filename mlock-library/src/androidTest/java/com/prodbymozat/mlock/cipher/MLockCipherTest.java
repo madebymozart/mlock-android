@@ -20,14 +20,12 @@
   SOFTWARE.
  */
 
-package com.prodbymozat.mlock.secure;
+package com.prodbymozat.mlock.cipher;
 
 import com.prodbymozat.mlock.keystore.MLockKeyStore;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.security.Key;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.*;
@@ -56,15 +54,13 @@ public class MLockCipherTest {
 
     @After
     public void tearDown() {
-        if (mLockKeyStore.hasKey(TEST_KEY_ALIAS)) {
-            mLockKeyStore.deleteKey(TEST_KEY_ALIAS);
-        }
+        mLockKeyStore.deleteAllKeys();
     }
 
     @Test
     public void encrypt_shouldEncryptPlainData() {
         // Arrange
-        final Key key = mLockKeyStore.generateKey(TEST_KEY_ALIAS);
+        final Object key = mLockKeyStore.generateKey(TEST_KEY_ALIAS);
 
         // Act
         final String encrypted = mLockSymmetricCipher.encrypt(key, TEST_DATA_DECRYPTED);
@@ -78,7 +74,7 @@ public class MLockCipherTest {
     @Test
     public void decrypt_shouldDecryptEncryptedData() {
         // Arrange
-        final Key key = mLockKeyStore.generateKey(TEST_KEY_ALIAS);
+        final Object key = mLockKeyStore.generateKey(TEST_KEY_ALIAS);
 
         // Act
         final String encrypted = mLockSymmetricCipher.encrypt(key, TEST_DATA_DECRYPTED);
@@ -91,8 +87,8 @@ public class MLockCipherTest {
     @Test
     public void decrypt_shouldNotDecryptEncryptedDataWithDifferentKey() {
         // Arrange
-        final Key key = mLockKeyStore.generateKey(TEST_KEY_ALIAS);
-        final Key key2 = mLockKeyStore.generateKey(TEST_KEY_ALIAS + "1");
+        final Object key = mLockKeyStore.generateKey(TEST_KEY_ALIAS);
+        final Object key2 = mLockKeyStore.generateKey(TEST_KEY_ALIAS + "1");
 
         // Act
         final String encrypted = mLockSymmetricCipher.encrypt(key, TEST_DATA_DECRYPTED);
