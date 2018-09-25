@@ -29,6 +29,7 @@ import org.junit.Test;
 import java.security.Key;
 import java.security.KeyStoreException;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.*;
 
 public class MLockKeyStoreTest {
@@ -43,7 +44,7 @@ public class MLockKeyStoreTest {
 
     @Before
     public void setUp() {
-        mLockKeyStore = MLockKeyStore.getInstance();
+        mLockKeyStore = MLockKeyStore.getInstance(getInstrumentation().getContext());
     }
 
     @After
@@ -85,7 +86,7 @@ public class MLockKeyStoreTest {
     public void getKey_generatedKeyPersistsUponNewInstance() {
         // Arrange, Using 2 different instances of the MLockKeyStore Class
         mLockKeyStore.generateKey(TEST_ALIAS);
-        final MLockKeyStore mLockKeyStore2 = MLockKeyStore.getInstance();
+        final MLockKeyStore mLockKeyStore2 = MLockKeyStore.getInstance(getInstrumentation().getContext());
 
         // Act
         final Key generatedKey = mLockKeyStore.getKey(TEST_ALIAS);
@@ -133,7 +134,7 @@ public class MLockKeyStoreTest {
 
         // Assert
         // Assure it has truly been deleted by loading the keystore in a different instance.
-        assertFalse(MLockKeyStore.getInstance().hasKey(TEST_ALIAS));
+        assertFalse(MLockKeyStore.getInstance(getInstrumentation().getContext()).hasKey(TEST_ALIAS));
     }
 
     @Test

@@ -60,7 +60,7 @@ public abstract class MLockCipher {
      * @apiNote This is not a singleton, this will return a new object every time it is called.
      */
     public static MLockCipher getInstance() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? new MLockSymmetricCipher() : null;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? new MLockSymmetricCipher() : new MLockAsymmetricCipher();
     }
 
     /**

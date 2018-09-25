@@ -22,6 +22,7 @@
 
 package com.prodbymozat.mlock.keystore;
 
+import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -39,6 +40,7 @@ public abstract class MLockKeyStore {
     // Class Constants
     static final String ANDROID_KEY_STORE = "AndroidKeyStore";
 
+
     /**
      * Class Logger
      */
@@ -54,12 +56,13 @@ public abstract class MLockKeyStore {
 
     /**
      * Create a new instance of the {@link MLockKeyStore} based on the API version. If the Target platform is less that
-     * API 23, it will create , otherwise it will create and instance of {@link MLockSymmetricKeyStore}.
+     * API 23, it will create , otherwise it will create and instance of {@link MLockKeyStoreSymmetric}.
      *
      * @apiNote This is not a singleton, this will return a new object every time it is called.
      */
-    public static MLockKeyStore getInstance() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? new MLockSymmetricKeyStore() : null;
+    public static MLockKeyStore getInstance(@NonNull Context context) {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ?
+                new MLockKeyStoreSymmetric() : new MLockKeyStoreAsymmetric(context);
     }
 
     /**

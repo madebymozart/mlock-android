@@ -36,15 +36,15 @@ import java.security.NoSuchProviderException;
 import java.util.logging.Level;
 
 @TargetApi(Build.VERSION_CODES.M)
-final class MLockSymmetricKeyStore extends MLockKeyStore {
+final class MLockKeyStoreSymmetric extends MLockKeyStore {
 
     // Class Constants
-    private static final String TAG = MLockSymmetricKeyStore.class.getSimpleName();
+    private static final String TAG = MLockKeyStoreSymmetric.class.getSimpleName();
 
     /**
      * Constructor.
      */
-    MLockSymmetricKeyStore() {
+    MLockKeyStoreSymmetric() {
         super(TAG);
     }
 

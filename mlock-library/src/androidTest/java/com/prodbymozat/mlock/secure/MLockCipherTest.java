@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import java.security.Key;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.*;
 
 public class MLockCipherTest {
@@ -49,7 +50,7 @@ public class MLockCipherTest {
 
     @Before
     public void setUp() {
-        mLockKeyStore = MLockKeyStore.getInstance();
+        mLockKeyStore = MLockKeyStore.getInstance(getInstrumentation().getContext());
         mLockSymmetricCipher = MLockCipher.getInstance();
     }
 
