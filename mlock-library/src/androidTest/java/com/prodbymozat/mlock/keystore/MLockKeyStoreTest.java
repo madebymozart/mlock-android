@@ -1,15 +1,13 @@
-package com.prodbymozat.mlock.secure;
+package com.prodbymozat.mlock.keystore;
 
-import javax.crypto.SecretKey;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import java.security.Key;
+import java.security.KeyStoreException;
+
+import static org.junit.Assert.*;
 
 public class MLockKeyStoreTest {
 
@@ -23,7 +21,7 @@ public class MLockKeyStoreTest {
 
     @Before
     public void setUp() {
-        mLockKeyStore = new MLockKeyStore();
+        mLockKeyStore = MLockKeyStore.getInstance();
     }
 
     @After
@@ -34,16 +32,16 @@ public class MLockKeyStoreTest {
     @Test
     public void generateKey_SecretKeyIsNotNull() {
         // Act
-        final SecretKey secretKey = mLockKeyStore.generateKey(TEST_ALIAS);
+        final Key key = mLockKeyStore.generateKey(TEST_ALIAS);
 
         // Asset
-        assertNotNull(secretKey);
+        assertNotNull(key);
     }
 
     @Test
     public void getKey_shouldReturnNullIfNoKeyHasBeenGenerated() {
         // Act
-        final SecretKey symmetricKey = mLockKeyStore.getKey(TEST_ALIAS);
+        final Key symmetricKey = mLockKeyStore.getKey(TEST_ALIAS);
 
         // Asset
         assertNull(symmetricKey);
@@ -55,7 +53,7 @@ public class MLockKeyStoreTest {
         mLockKeyStore.generateKey(TEST_ALIAS);
 
         // Act
-        final SecretKey generatedKey = mLockKeyStore.getKey(TEST_ALIAS);
+        final Key generatedKey = mLockKeyStore.getKey(TEST_ALIAS);
 
         // Assert
         assertNotNull(generatedKey);
@@ -63,16 +61,17 @@ public class MLockKeyStoreTest {
 
     @Test
     public void getKey_generatedKeyPersistsUponNewInstance() {
-        // Arrange
+        // Arrange, Using 2 different instances of the MLockKeyStore Class
         mLockKeyStore.generateKey(TEST_ALIAS);
-        final MLockKeyStore mLockKeyStore2 = new MLockKeyStore();
+        final MLockKeyStore mLockKeyStore2 = MLockKeyStore.getInstance();
 
         // Act
-        final SecretKey generatedKey = mLockKeyStore.getKey(TEST_ALIAS);
-        final SecretKey generatedKey2 = mLockKeyStore2.getKey(TEST_ALIAS);
+        final Key generatedKey = mLockKeyStore.getKey(TEST_ALIAS);
+        final Key generatedKey2 = mLockKeyStore2.getKey(TEST_ALIAS);
 
         // Assert
-        assertEquals(generatedKey2, generatedKey);
+        assertNotSame(mLockKeyStore, mLockKeyStore2);
+        assertEquals(generatedKey, generatedKey2);
     }
 
     @Test
@@ -112,13 +111,11 @@ public class MLockKeyStoreTest {
 
         // Assert
         // Assure it has truly been deleted by loading the keystore in a different instance.
-        final MLockKeyStore mLockKeyStore2 =
-                new MLockKeyStore();
-        assertFalse(mLockKeyStore2.hasKey(TEST_ALIAS));
+        assertFalse(MLockKeyStore.getInstance().hasKey(TEST_ALIAS));
     }
 
     @Test
-    public void deleteAllKeys_shouldDeleteAllKeys() {
+    public void deleteAllKeys_shouldDeleteAllKeys() throws KeyStoreException {
         // Arrange
         mLockKeyStore.generateKey(TEST_ALIAS);
         mLockKeyStore.generateKey(TEST_ALIAS + "1");
@@ -131,5 +128,6 @@ public class MLockKeyStoreTest {
         assertFalse(mLockKeyStore.hasKey(TEST_ALIAS));
         assertFalse(mLockKeyStore.hasKey(TEST_ALIAS + "1"));
         assertFalse(mLockKeyStore.hasKey(TEST_ALIAS + "2"));
+        assertFalse(mLockKeyStore.getKeyStore().aliases().hasMoreElements());
     }
 }

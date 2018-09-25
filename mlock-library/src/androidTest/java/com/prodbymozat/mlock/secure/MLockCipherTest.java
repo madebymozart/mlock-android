@@ -1,14 +1,13 @@
 package com.prodbymozat.mlock.secure;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.SecretKey;
+import com.prodbymozat.mlock.keystore.MLockKeyStore;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import java.security.Key;
+
+import static org.junit.Assert.*;
 
 public class MLockCipherTest {
 
@@ -24,12 +23,12 @@ public class MLockCipherTest {
     /**
      * {@link MLockCipher}
      */
-    private MLockCipher mLockCipher;
+    private MLockCipher mLockSymmetricCipher;
 
     @Before
     public void setUp() {
-        mLockKeyStore = new MLockKeyStore();
-        mLockCipher = new MLockCipher();
+        mLockKeyStore = MLockKeyStore.getInstance();
+        mLockSymmetricCipher = MLockCipher.getInstance();
     }
 
     @After
@@ -42,28 +41,41 @@ public class MLockCipherTest {
     @Test
     public void encrypt_shouldEncryptPlainData() {
         // Arrange
-        final SecretKey key = mLockKeyStore.generateKey(TEST_KEY_ALIAS);
+        final Key key = mLockKeyStore.generateKey(TEST_KEY_ALIAS);
 
         // Act
-        final String encryptedString = mLockCipher.encrypt(key, TEST_DATA_DECRYPTED);
+        final String encrypted = mLockSymmetricCipher.encrypt(key, TEST_DATA_DECRYPTED);
 
         // Assert
-        assertNotEquals(encryptedString, null);
-        assertNotEquals(encryptedString, "");
-        assertNotEquals(encryptedString, TEST_DATA_DECRYPTED);
+        assertNotEquals(encrypted, null);
+        assertNotEquals(encrypted, "");
+        assertNotEquals(encrypted, TEST_DATA_DECRYPTED);
     }
 
     @Test
-    public void decrypt_shouldDecryptEncryptedData()
-            throws BadPaddingException, IllegalBlockSizeException {
+    public void decrypt_shouldDecryptEncryptedData() {
         // Arrange
-        final SecretKey key = mLockKeyStore.generateKey(TEST_KEY_ALIAS);
+        final Key key = mLockKeyStore.generateKey(TEST_KEY_ALIAS);
 
         // Act
-        final String encryptedString = mLockCipher.encrypt(key, TEST_DATA_DECRYPTED);
-        final String decryptedString = mLockCipher.decrypt(key, encryptedString);
+        final String encrypted = mLockSymmetricCipher.encrypt(key, TEST_DATA_DECRYPTED);
+        final String decrypted = mLockSymmetricCipher.decrypt(key, encrypted);
 
         // Assert
-        assertEquals(decryptedString, TEST_DATA_DECRYPTED);
+        assertEquals(decrypted, TEST_DATA_DECRYPTED);
+    }
+
+    @Test
+    public void decrypt_shouldNotDecryptEncryptedDataWithDifferentKey() {
+        // Arrange
+        final Key key = mLockKeyStore.generateKey(TEST_KEY_ALIAS);
+        final Key key2 = mLockKeyStore.generateKey(TEST_KEY_ALIAS + "1");
+
+        // Act
+        final String encrypted = mLockSymmetricCipher.encrypt(key, TEST_DATA_DECRYPTED);
+        final String decrypted = mLockSymmetricCipher.decrypt(key2, encrypted);
+
+        // Assert
+        assertNull(decrypted);
     }
 }
