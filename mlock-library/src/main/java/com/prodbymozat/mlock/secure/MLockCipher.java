@@ -11,8 +11,6 @@ import java.util.logging.Logger;
 
 public abstract class MLockCipher {
 
-    // Class Constants
-    protected static final String TAG = MLockCipher.class.getSimpleName();
     protected static final String UTF_8 = "UTF-8";
     protected static final String IV_SEPARATOR = "]";
 
