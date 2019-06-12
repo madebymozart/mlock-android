@@ -24,132 +24,138 @@ package com.prodbymozat.mlock.keystore;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.security.KeyStoreException;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.*;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MLockKeyStoreTest {
 
-    // Test Constants
-    private final static String TEST_ALIAS = "Test Alias";
+  // Test Constants
+  private final static String TEST_ALIAS = "Test Alias";
 
-    /**
-     * {@link MLockKeyStore}
-     */
-    private MLockKeyStore mLockKeyStore;
+  /**
+   * {@link MLockKeyStore}
+   */
+  private MLockKeyStore mLockKeyStore;
 
-    @Before
-    public void setUp() {
-        mLockKeyStore = MLockKeyStore.getInstance(getInstrumentation().getContext());
-    }
+  @Before
+  public void setUp() {
+    mLockKeyStore = MLockKeyStore.getInstance(getInstrumentation().getContext());
+  }
 
-    @After
-    public void tearDown() {
-        mLockKeyStore.deleteAllKeys();
-    }
+  @After
+  public void tearDown() {
+    mLockKeyStore.deleteAllKeys();
+  }
 
-    @Test
-    public void generateKey_SecretKeyIsNotNull() {
-        // Act
-        final Object key = mLockKeyStore.generateKey(TEST_ALIAS);
+  @Test
+  public void generateKey_SecretKeyIsNotNull() {
+    // Act
+    final Object key = mLockKeyStore.generateKey(TEST_ALIAS);
 
-        // Asset
-        assertNotNull(key);
-    }
+    // Asset
+    assertNotNull(key);
+  }
 
-    @Test
-    public void getKey_shouldReturnNullIfNoKeyHasBeenGenerated() {
-        // Act
-        final Object symmetricKey = mLockKeyStore.getKey(TEST_ALIAS);
+  @Test
+  public void getKey_shouldReturnNullIfNoKeyHasBeenGenerated() {
+    // Act
+    final Object symmetricKey = mLockKeyStore.getKey(TEST_ALIAS);
 
-        // Asset
-        assertNull(symmetricKey);
-    }
+    // Asset
+    assertNull(symmetricKey);
+  }
 
-    @Test
-    public void getKey_shouldNotBeNullAfterKeyIsGeneratedAndGetKeyIsCalled() {
-        // Arrange
-        mLockKeyStore.generateKey(TEST_ALIAS);
+  @Test
+  public void getKey_shouldNotBeNullAfterKeyIsGeneratedAndGetKeyIsCalled() {
+    // Arrange
+    mLockKeyStore.generateKey(TEST_ALIAS);
 
-        // Act
-        final Object generatedKey = mLockKeyStore.getKey(TEST_ALIAS);
+    // Act
+    final Object generatedKey = mLockKeyStore.getKey(TEST_ALIAS);
 
-        // Assert
-        assertNotNull(generatedKey);
-    }
+    // Assert
+    assertNotNull(generatedKey);
+  }
 
-    @Test
-    public void getKey_generatedKeyPersistsUponNewInstance() {
-        // Arrange, Using 2 different instances of the MLockKeyStore Class
-        mLockKeyStore.generateKey(TEST_ALIAS);
-        final MLockKeyStore mLockKeyStore2 = MLockKeyStore.getInstance(getInstrumentation().getContext());
+  @Test
+  public void getKey_generatedKeyPersistsUponNewInstance() {
+    // Arrange, Using 2 different instances of the MLockKeyStore Class
+    mLockKeyStore.generateKey(TEST_ALIAS);
+    final MLockKeyStore mLockKeyStore2 = MLockKeyStore.getInstance(getInstrumentation().getContext());
 
-        // Act
-        final Object generatedKey = mLockKeyStore.getKey(TEST_ALIAS);
-        final Object generatedKey2 = mLockKeyStore2.getKey(TEST_ALIAS);
+    // Act
+    final Object generatedKey = mLockKeyStore.getKey(TEST_ALIAS);
+    final Object generatedKey2 = mLockKeyStore2.getKey(TEST_ALIAS);
 
-        // Assert, using string representation since Asymmetric keys Objects can't be directly compared to each other
-        assertNotSame(mLockKeyStore, mLockKeyStore2);
-        assertEquals(generatedKey.toString(), generatedKey2.toString());
-    }
+    // Assert, using string representation since Asymmetric keys Objects can't be directly compared to
+    // each other
+    assertNotNull(generatedKey);
+    assertNotNull(generatedKey2);
+    assertNotSame(mLockKeyStore, mLockKeyStore2);
+    assertEquals(generatedKey.toString(), generatedKey2.toString());
+  }
 
-    @Test
-    public void hasKey_shouldBeTrueAfterCallingGenerateKey() {
-        // Act
-        mLockKeyStore.generateKey(TEST_ALIAS);
+  @Test
+  public void hasKey_shouldBeTrueAfterCallingGenerateKey() {
+    // Act
+    mLockKeyStore.generateKey(TEST_ALIAS);
 
-        // Assert
-        assertTrue(mLockKeyStore.hasKey(TEST_ALIAS));
-    }
+    // Assert
+    assertTrue(mLockKeyStore.hasKey(TEST_ALIAS));
+  }
 
-    @Test
-    public void hasKey_shouldBeFalseIfNoKeyWasGenerated() {
-        // Assert
-        assertFalse(mLockKeyStore.hasKey(TEST_ALIAS));
-    }
+  @Test
+  public void hasKey_shouldBeFalseIfNoKeyWasGenerated() {
+    // Assert
+    assertFalse(mLockKeyStore.hasKey(TEST_ALIAS));
+  }
 
-    @Test
-    public void deleteKey_shouldDeleteKey() {
-        // Arrange
-        mLockKeyStore.generateKey(TEST_ALIAS);
+  @Test
+  public void deleteKey_shouldDeleteKey() {
+    // Arrange
+    mLockKeyStore.generateKey(TEST_ALIAS);
 
-        // Act
-        mLockKeyStore.deleteKey(TEST_ALIAS);
+    // Act
+    mLockKeyStore.deleteKey(TEST_ALIAS);
 
-        // Assert
-        assertFalse(mLockKeyStore.hasKey(TEST_ALIAS));
-    }
+    // Assert
+    assertFalse(mLockKeyStore.hasKey(TEST_ALIAS));
+  }
 
-    @Test
-    public void deleteKey_shouldNotPersistUponNewInstance() {
-        // Arrange
-        mLockKeyStore.generateKey(TEST_ALIAS);
+  @Test
+  public void deleteKey_shouldNotPersistUponNewInstance() {
+    // Arrange
+    mLockKeyStore.generateKey(TEST_ALIAS);
 
-        // Act
-        mLockKeyStore.deleteKey(TEST_ALIAS);
+    // Act
+    mLockKeyStore.deleteKey(TEST_ALIAS);
 
-        // Assert
-        // Assure it has truly been deleted by loading the keystore in a different instance.
-        assertFalse(MLockKeyStore.getInstance(getInstrumentation().getContext()).hasKey(TEST_ALIAS));
-    }
+    // Assert
+    // Assure it has truly been deleted by loading the keystore in a different instance.
+    assertFalse(MLockKeyStore.getInstance(getInstrumentation().getContext()).hasKey(TEST_ALIAS));
+  }
 
-    @Test
-    public void deleteAllKeys_shouldDeleteAllKeys() throws KeyStoreException {
-        // Arrange
-        mLockKeyStore.generateKey(TEST_ALIAS);
-        mLockKeyStore.generateKey(TEST_ALIAS + "1");
-        mLockKeyStore.generateKey(TEST_ALIAS + "2");
+  @Test
+  public void deleteAllKeys_shouldDeleteAllKeys() throws KeyStoreException {
+    // Arrange
+    mLockKeyStore.generateKey(TEST_ALIAS);
+    mLockKeyStore.generateKey(TEST_ALIAS + "1");
+    mLockKeyStore.generateKey(TEST_ALIAS + "2");
 
-        // Act
-        mLockKeyStore.deleteAllKeys();
+    // Act
+    mLockKeyStore.deleteAllKeys();
 
-        // Assert
-        assertFalse(mLockKeyStore.hasKey(TEST_ALIAS));
-        assertFalse(mLockKeyStore.hasKey(TEST_ALIAS + "1"));
-        assertFalse(mLockKeyStore.hasKey(TEST_ALIAS + "2"));
-        assertFalse(mLockKeyStore.getKeyStore().aliases().hasMoreElements());
-    }
+    // Assert
+    assertFalse(mLockKeyStore.hasKey(TEST_ALIAS));
+    assertFalse(mLockKeyStore.hasKey(TEST_ALIAS + "1"));
+    assertFalse(mLockKeyStore.hasKey(TEST_ALIAS + "2"));
+    assertFalse(mLockKeyStore.getKeyStore().aliases().hasMoreElements());
+  }
 }

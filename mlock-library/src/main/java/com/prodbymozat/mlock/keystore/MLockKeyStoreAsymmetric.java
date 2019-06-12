@@ -24,8 +24,8 @@ package com.prodbymozat.mlock.keystore;
 
 import android.content.Context;
 import android.security.KeyPairGeneratorSpec;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import javax.security.auth.x500.X500Principal;
 import java.math.BigInteger;

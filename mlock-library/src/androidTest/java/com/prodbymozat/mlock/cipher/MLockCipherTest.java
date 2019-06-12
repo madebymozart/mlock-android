@@ -25,11 +25,14 @@ package com.prodbymozat.mlock.cipher;
 import com.prodbymozat.mlock.keystore.MLockKeyStore;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.junit.Assert.*;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MLockCipherTest {
 
     // Test Constants
