@@ -20,40 +20,28 @@
   SOFTWARE.
  */
 
-package com.prodbymozat.mlock;
+package com.prodbymozat.mlock.exceptions;
 
-import android.content.Context;
-import androidx.annotation.Nullable;
-import com.prodbymozat.mlock.exceptions.MLockException;
-import com.prodbymozat.mlock.exceptions.MLockInitializedException;
+/**
+ * thrown when {@link com.prodbymozat.mlock.MLock} is already initialized.
+ */
+public class MLockInitializedException extends MLockException {
 
-public final class MLock {
+  private static final String MESSAGE = "MLock has already been initialized...";
 
   /**
-   * {@link MLockInternal}.
+   * Constructor.
    */
-  private static volatile MLockInternal internal = null;
-
-  public static void init(Context context, OnInitializeListener listener) {
-    if (internal != null) {
-      // MLock has already been initialized.
-      listener.onComplete(new MLockInitializedException());
-      return;
-    }
-
-    // Initialize MLock internal
-    internal = new MLockInternal(context);
+  public MLockInitializedException() {
+    this(MESSAGE);
   }
 
   /**
-   * Completion listener for {@link MLock#init(Context, OnInitializeListener)}.
+   * Constructor.
+   *
+   * @param message Message of the exception.
    */
-  public interface OnInitializeListener {
-    /**
-     * Called when {@link MLock#init(Context, OnInitializeListener)}. has completed
-     *
-     * @param exception An exception if an error has occurred, otherwise null.
-     */
-    void onComplete(@Nullable MLockException exception);
+  public MLockInitializedException(String message) {
+    super(message);
   }
 }

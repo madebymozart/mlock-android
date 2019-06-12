@@ -35,7 +35,6 @@ public abstract class MLockCipher<T> {
 
   // Class Constants
   static final int GCM_SPEC_LENGTH = 128;
-  static final String UTF_8 = "UTF-8";
   static final String IV_SEPARATOR = "]";
 
   // Class Ciphers

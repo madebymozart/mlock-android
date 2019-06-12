@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2019 Mozart Alexander Louis
+  Copyright (c) 2018 Mozart Alexander Louis
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -22,38 +22,5 @@
 
 package com.prodbymozat.mlock;
 
-import android.content.Context;
-import androidx.annotation.Nullable;
-import com.prodbymozat.mlock.exceptions.MLockException;
-import com.prodbymozat.mlock.exceptions.MLockInitializedException;
-
-public final class MLock {
-
-  /**
-   * {@link MLockInternal}.
-   */
-  private static volatile MLockInternal internal = null;
-
-  public static void init(Context context, OnInitializeListener listener) {
-    if (internal != null) {
-      // MLock has already been initialized.
-      listener.onComplete(new MLockInitializedException());
-      return;
-    }
-
-    // Initialize MLock internal
-    internal = new MLockInternal(context);
-  }
-
-  /**
-   * Completion listener for {@link MLock#init(Context, OnInitializeListener)}.
-   */
-  public interface OnInitializeListener {
-    /**
-     * Called when {@link MLock#init(Context, OnInitializeListener)}. has completed
-     *
-     * @param exception An exception if an error has occurred, otherwise null.
-     */
-    void onComplete(@Nullable MLockException exception);
-  }
+final class MLockNative {
 }

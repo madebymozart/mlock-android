@@ -22,7 +22,6 @@
 
 package com.prodbymozat.mlock.keystore;
 
-import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import androidx.annotation.NonNull;
@@ -65,10 +64,6 @@ public abstract class MLockKeyStore<T> {
    * @apiNote This is not a singleton, this will return a new object every time it is called.
    */
   public static MLockKeyStore getInstance(@NonNull Context context) {
-    if (!(context instanceof Application)) {
-
-    }
-
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? new MLockKeyStoreSymmetric()
                                                           : new MLockKeyStoreAsymmetric(context);
   }
@@ -99,8 +94,8 @@ public abstract class MLockKeyStore<T> {
     try {
       return Objects.requireNonNull(getKeyStore()).isKeyEntry(alias);
     } catch (KeyStoreException e) {
-      logger.log(Level.WARNING, "Unable to check if key is entry, by alias \"" + alias + "\" because of " +
-          "exception: " + e.getMessage());
+      logger.log(Level.WARNING, "Unable to check if key is entry, by alias \"" + alias + "\" because of "
+          + "exception: " + e.getMessage());
       return false;
     }
   }
@@ -113,10 +108,7 @@ public abstract class MLockKeyStore<T> {
   public final void deleteKey(@NonNull String alias) {
     try {
       final KeyStore keyStore = getKeyStore();
-      if (keyStore == null || !hasKey(alias)) {
-        return;
-      }
-
+      if (keyStore == null || !hasKey(alias)) return;
       keyStore.deleteEntry(alias);
     } catch (KeyStoreException e) {
       logger.log(Level.WARNING, "Unable to delete key by alias: \"" + alias + "\" because of exception: "
@@ -133,7 +125,6 @@ public abstract class MLockKeyStore<T> {
       final KeyStore keyStore = getKeyStore();
       final Enumeration<String> aliases = Objects.requireNonNull(keyStore).aliases();
       while (aliases.hasMoreElements()) deleteKey(aliases.nextElement());
-
     } catch (KeyStoreException e) {
       e.printStackTrace();
     }
@@ -150,7 +141,7 @@ public abstract class MLockKeyStore<T> {
     try {
       final KeyStore keyStore = KeyStore.getInstance(ANDROID_KEY_STORE);
       keyStore.load(null);
-      return Objects.requireNonNull(keyStore);
+      return keyStore;
     } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException e) {
       logger.log(Level.WARNING, "Unable to obtain KeyStore: " + e.getMessage());
       return null;

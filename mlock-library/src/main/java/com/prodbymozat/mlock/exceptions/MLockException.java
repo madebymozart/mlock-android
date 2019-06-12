@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2018 Mozart Alexander Louis
+  Copyright (c) 2019 Mozart Alexander Louis
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,19 @@
   SOFTWARE.
  */
 
-package com.prodbymozat.mlock;
+package com.prodbymozat.mlock.exceptions;
 
-final class MLockNativeBridge {
+/**
+ * Base Exception class for MLock.
+ */
+public class MLockException extends Exception {
+
+  /**
+   * Constructor.
+   *
+   * @param message Message of the exception.
+   */
+  public MLockException(String message) {
+    super(message);
+  }
 }
