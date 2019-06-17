@@ -22,27 +22,52 @@
 
 package com.prodbymozat.mlock;
 
+import android.app.Application;
 import android.content.Context;
 import androidx.annotation.Nullable;
 import com.prodbymozat.mlock.exceptions.MLockException;
 import com.prodbymozat.mlock.exceptions.MLockInitializedException;
+import com.prodbymozat.mlock.exceptions.MLockInvalidContextException;
 
+/**
+ * Entry point class into the MLock Library.
+ */
 public final class MLock {
-
   /**
    * {@link MLockInternal}.
    */
   private static volatile MLockInternal internal = null;
 
+  /**
+   * Initializes the MLock Library.
+   *
+   * @param context  Application context. use `getApplicationContext()` method.
+   * @param listener {@link OnInitializeListener}. required to implement in case an exception is caught
+   */
   public static void init(Context context, OnInitializeListener listener) {
-    if (internal != null) {
-      // MLock has already been initialized.
+    final MLockException exception = check(context);
+    if (exception != null) {
       listener.onComplete(new MLockInitializedException());
       return;
     }
 
-    // Initialize MLock internal
+    // Initialize MLockInternal
     internal = new MLockInternal(context);
+  }
+
+  /**
+   * A pre-initialization method check method before initialization of the MLock.
+   */
+  @Nullable
+  private static MLockException check(Context context) {
+    // assure MLock has not already been initialized.
+    if (internal != null) return new MLockInitializedException();
+
+    // Assure context is from the `Application` class
+    if (!(context instanceof Application)) return new MLockInvalidContextException();
+
+    // All check pass, return null
+    return null;
   }
 
   /**
