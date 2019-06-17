@@ -20,7 +20,7 @@
   SOFTWARE.
  */
 
-package com.prodbymozat.mlock.keystore;
+package com.prodbymozat.mlock;
 
 import android.annotation.TargetApi;
 import android.os.Build;
@@ -49,7 +49,7 @@ final class MLockKeyStoreSymmetric extends MLockKeyStore<SecretKey> {
     }
 
     /**
-     * @see MLockKeyStore#generateKey(String)
+     * @see MLockKeyStore#generateKey
      */
     @Override
     public final SecretKey generateKey(@NonNull String alias) {
@@ -71,7 +71,7 @@ final class MLockKeyStoreSymmetric extends MLockKeyStore<SecretKey> {
     }
 
     /**
-     * @see MLockKeyStore#getKey(String)
+     * @see MLockKeyStore#getKey
      */
     @Nullable
     @Override

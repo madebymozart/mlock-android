@@ -20,7 +20,7 @@
   SOFTWARE.
  */
 
-package com.prodbymozat.mlock.keystore;
+package com.prodbymozat.mlock;
 
 import android.content.Context;
 import android.security.KeyPairGeneratorSpec;
@@ -54,7 +54,7 @@ public class MLockKeyStoreAsymmetric extends MLockKeyStore<KeyStore.PrivateKeyEn
     }
 
     /**
-     * @see MLockKeyStore#generateKey(String)
+     * @see MLockKeyStore#generateKey
      */
     @Override
     public KeyStore.PrivateKeyEntry generateKey(@NonNull String alias) {
@@ -86,7 +86,7 @@ public class MLockKeyStoreAsymmetric extends MLockKeyStore<KeyStore.PrivateKeyEn
     }
 
     /**
-     * @see MLockKeyStore#getKey(String)
+     * @see MLockKeyStore#getKey
      */
     @Nullable
     @Override

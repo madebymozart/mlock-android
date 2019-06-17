@@ -20,7 +20,7 @@
   SOFTWARE.
  */
 
-package com.prodbymozat.mlock.cipher;
+package com.prodbymozat.mlock;
 
 import android.os.Build;
 import androidx.annotation.NonNull;
@@ -75,7 +75,7 @@ public abstract class MLockCipher<T> {
   abstract String encrypt(@NonNull T key, @NonNull String data);
 
   /**
-   * Decrypts data that was encrypted by {@link MLockCipher#encrypt(T, String)}. Data should contain key
+   * Decrypts data that was encrypted by {@link MLockCipher#encrypt}. Data should contain key
    * inside in this format <iv key>]<encrypted data>. This is critical as the {@link IvParameterSpec} will
    * need it to properly initialize the {@link Cipher} in {@link Cipher#DECRYPT_MODE}
    *

@@ -20,6 +20,19 @@
   SOFTWARE.
  */
 
-@javax.annotation.ParametersAreNonnullByDefault
-package com.prodbymozat.mlock;
+package com.prodbymozat.mlock.data;
 
+/**
+ * String data model class for MLock. Use this to save a String in MLock
+ */
+public abstract class MLockString extends MLockDataType<String> {
+  /**
+   * Constructor.
+   *
+   * @param key   Key associated with value
+   * @param value Value to be saved. Must be one of the supported types listed in the Javadoc.
+   */
+  public MLockString(String key, String value) {
+    super(key, value);
+  }
+}

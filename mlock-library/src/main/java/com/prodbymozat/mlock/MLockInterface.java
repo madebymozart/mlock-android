@@ -22,68 +22,41 @@
 
 package com.prodbymozat.mlock;
 
+import androidx.annotation.Nullable;
 import com.prodbymozat.mlock.data.MLockDataType;
-
-import java.util.logging.Logger;
-
 /**
- * Internal implementation of MLock. This class contains all the
+ * Interface class defining the method to save and retrieve data from MLock
  */
-public class MLockInternal implements MLockInterface {
-
-  // Class Constants
-  private static final String TAG = MLock.class.getSimpleName();
+interface MLockInterface {
+  /**
+   * Saves a value (Integer) in the MLock encrypted store synchronously.
+   *
+   * @param key  Key for the value.
+   * @param data Data being saved. Must be one of the supported types listed in {@link MLockDataType}
+   */
+  void commit(String key, MLockDataType data);
 
   /**
-   * Class Logger
+   * Saves a value (Integer) in the MLock encrypted store asynchronously.
+   *
+   * @param key  Key for the value.
+   * @param data Data being saved. Must be one of the supported types listed in {@link MLockDataType}
    */
-  private final Logger logger;
+  void apply(String key, MLockDataType data);
 
   /**
-   * {@link MLockCipher}
+   * Retrieves a value in the MLock encrypted store synchronously.
+   *
+   * @param key Key for the value.
    */
-  private final MLockCipher cipher;
+  @Nullable
+  MLockDataType get(String key);
 
   /**
-   * {@link MLockKeyStore}
+   * Retrieves a value (String) in the MLock encrypted store asynchronously.
+   *
+   * @param key      Key for the value.
+   * @param listener {@link MLockAsyncRetrieveListener}.
    */
-  private final MLockKeyStore keyStore;
-
-  /**
-   * {@link MLockNative}
-   */
-  private MLockNative lockNative;
-
-  /**
-   * Constructor
-   */
-  MLockInternal(MLockCipher cipher, MLockKeyStore keyStore, MLockNative lockNative) {
-    this.logger = Logger.getLogger(TAG);
-    this.cipher = cipher;
-    this.keyStore = keyStore;
-    this.lockNative = lockNative;
-  }
-
-  /**
-   * Methods from {@link MLockInternal} start.
-   */
-  @Override
-  public void commit(String key, MLockDataType data) {
-
-  }
-
-  @Override
-  public void apply(String key, MLockDataType data) {
-
-  }
-
-  @Override
-  public MLockDataType get(String key) {
-    return null;
-  }
-
-  @Override
-  public void get(String key, MLockAsyncRetrieveListener listener) {
-
-  }
+  void get(String key, MLockAsyncRetrieveListener listener);
 }

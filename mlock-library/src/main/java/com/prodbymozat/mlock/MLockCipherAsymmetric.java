@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2018 Mozart Alexander Louis
+  Copyright (c) 2019 Mozart Alexander Louis
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -20,55 +20,47 @@
   SOFTWARE.
  */
 
-package com.prodbymozat.mlock.cipher;
+package com.prodbymozat.mlock;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.util.Base64;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import javax.crypto.*;
-import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 
-@TargetApi(Build.VERSION_CODES.M)
-final class MLockCipherSymmetric extends MLockCipher<SecretKey> {
+class MLockCipherAsymmetric extends MLockCipher<KeyStore.PrivateKeyEntry> {
 
   // Class Constants
-  private static final String TAG = MLockCipherSymmetric.class.getSimpleName();
+  private static final String TAG = MLockCipherAsymmetric.class.getSimpleName();
 
   /**
    * Constructor.
    */
-  MLockCipherSymmetric() {
+  MLockCipherAsymmetric() {
     super(TAG);
   }
 
   /**
-   * @see MLockCipher#encrypt(Object, String)
+   * @see MLockCipher#encrypt
    */
   @Override
   @Nullable
-  final String encrypt(@NonNull SecretKey key, @NonNull String data) {
+  final String encrypt(@NonNull KeyStore.PrivateKeyEntry key, @NonNull String data) {
     try {
       // Initialize Cipher in encryption mode with the secret key.
-      final Cipher cipher = Cipher.getInstance(SYMMETRIC_CIPHER);
-      cipher.init(Cipher.ENCRYPT_MODE, key);
-
-      // Create Base64 encoded IV
-      final String iv = Base64.encodeToString(cipher.getIV(), Base64.DEFAULT);
-
-      // Encrypt String and encode to Base64
-      final String encryptedString =
-          Base64.encodeToString(cipher.doFinal(data.getBytes(StandardCharsets.UTF_8)), Base64.DEFAULT);
+      final Cipher cipher = Cipher.getInstance(ASYMMETRIC_CIPHER);
+      cipher.init(Cipher.ENCRYPT_MODE, key.getCertificate().getPublicKey());
 
       // Create full encrypted string.
-      return iv + IV_SEPARATOR + encryptedString;
+      return Base64.encodeToString(cipher.doFinal(data.getBytes(StandardCharsets.UTF_8)), Base64.DEFAULT);
     } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
         | BadPaddingException | IllegalBlockSizeException e) {
       logger.log(Level.WARNING, "Unable to encrypt data due to exception: " + e.getMessage());
@@ -78,32 +70,24 @@ final class MLockCipherSymmetric extends MLockCipher<SecretKey> {
   }
 
   /**
-   * @see MLockCipher#decrypt(Object, String)
+   * @see MLockCipher#decrypt
    */
   @Override
   @Nullable
-  final String decrypt(@NonNull SecretKey key, @NonNull String data) {
+  final String decrypt(@NonNull KeyStore.PrivateKeyEntry key, @NonNull String data) {
     try {
-      // Splitting the iv from the encoded data.
-      final String[] split = data.split(IV_SEPARATOR);
-      final String ivString = split[0];
-      final String encryptedString = split[1];
 
       // Initializing Cipher in Decrypt mode with IvParameterSpec.
-      final Cipher cipher = Cipher.getInstance(SYMMETRIC_CIPHER);
-      final GCMParameterSpec parameterSpec =
-          new GCMParameterSpec(GCM_SPEC_LENGTH, Base64.decode(ivString, Base64.DEFAULT));
-      cipher.init(Cipher.DECRYPT_MODE, key, parameterSpec);
+      final Cipher cipher = Cipher.getInstance(ASYMMETRIC_CIPHER);
+      cipher.init(Cipher.DECRYPT_MODE, key.getPrivateKey());
 
       // Decode the encrypted string to a byte array.
-      final byte[] decodedData =
-          cipher.doFinal(Base64.decode(encryptedString, Base64.DEFAULT));
+      final byte[] decodedData = cipher.doFinal(Base64.decode(data, Base64.DEFAULT));
 
       // Create a string from the decrypted data in bytes.
       return new String(decodedData, StandardCharsets.UTF_8);
-    } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
-        InvalidAlgorithmParameterException | BadPaddingException |
-        IllegalBlockSizeException e) {
+    } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
+        | BadPaddingException | IllegalBlockSizeException e) {
       logger.log(Level.WARNING, "Unable to decrypt data due to exception: "
           + e.getMessage());
     }

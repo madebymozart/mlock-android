@@ -20,9 +20,8 @@
   SOFTWARE.
  */
 
-package com.prodbymozat.mlock.cipher;
+package com.prodbymozat.mlock;
 
-import com.prodbymozat.mlock.keystore.MLockKeyStore;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;

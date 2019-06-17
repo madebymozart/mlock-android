@@ -20,6 +20,17 @@
   SOFTWARE.
  */
 
-@javax.annotation.ParametersAreNonnullByDefault
 package com.prodbymozat.mlock;
 
+import com.prodbymozat.mlock.data.MLockDataType;
+/**
+ * Completion listener for {@link MLock#get}
+ */
+public class MLockAsyncRetrieveListener<T> {
+  /**
+   * Completion listener for {@link MLock#get)}.
+   *
+   * @param data Data retrieved from MLock
+   */
+  void onDataRetrieved(MLockDataType<T> data) {}
+}

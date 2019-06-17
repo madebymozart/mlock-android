@@ -20,7 +20,7 @@
   SOFTWARE.
  */
 
-package com.prodbymozat.mlock.keystore;
+package com.prodbymozat.mlock;
 
 import org.junit.After;
 import org.junit.Before;

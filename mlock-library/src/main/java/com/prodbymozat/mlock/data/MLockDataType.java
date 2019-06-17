@@ -20,6 +20,50 @@
   SOFTWARE.
  */
 
-@javax.annotation.ParametersAreNonnullByDefault
-package com.prodbymozat.mlock;
+package com.prodbymozat.mlock.data;
 
+import java.util.Date;
+/**
+ * Bade Data model class for MLock, Containing the key, value and date the object was first created.
+ * <p>
+ * These are the supported data types for MLock:
+ * <ul>
+ * <li>Integer
+ * <li>Float
+ * <li>Double
+ * <li>String
+ * </ul>
+ * </p>
+ */
+public abstract class MLockDataType<T> {
+
+  private String key;
+
+  private T value;
+
+  private Date date;
+
+  /**
+   * Constructor.
+   *
+   * @param key   Key associated with value
+   * @param value Value to be saved. Must be one of the supported types listed in the Javadoc.
+   */
+  public MLockDataType(String key, T value) {
+    this.key = key;
+    this.value = value;
+    this.date = new Date();
+  }
+
+  public String getKey() {
+    return key;
+  }
+
+  public T getValue() {
+    return value;
+  }
+
+  public Date getDate() {
+    return date;
+  }
+}
