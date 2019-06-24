@@ -25,7 +25,7 @@ package com.prodbymozat.mlock;
 /**
  * String data model class for MLock. Use this to save a string value in MLock.
  */
-public class MLockString extends MLockData<String> {
+public final class MLockString extends MLockData<String> {
   /**
    * Constructor.
    *

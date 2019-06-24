@@ -22,14 +22,23 @@
 
 package com.prodbymozat.mlock;
 
+import com.prodbymozat.mlock.exceptions.MLockException;
+
 /**
  * Completion listener for {@link MLock#get}
  */
-public class MLockAsyncRetrieveListener<T> {
+public interface MLockAsyncRetrieveListener<T> {
   /**
-   * Completion listener for {@link MLock#get)}.
+   * Completion listener for {@link MLock#retrieve}.
    *
-   * @param data Data retrieved from MLock
+   * @param data Data retrieved from MLock.
    */
-  void onDataRetrieved(MLockData<T> data) {}
+  void onRetrieved(MLockData<T> data);
+
+  /**
+   * Error mothed for when data can not be retrieved.
+   *
+   * @param exception {@link MLockException} exception for when data can not be retrieved.
+   */
+  void onError(MLockException exception);
 }

@@ -23,9 +23,9 @@
 package com.prodbymozat.mlock;
 
 /**
- * String data model class for MLock. Use this to save a float value in MLock.
+ * Float data model class for MLock. Use this to save a float value in MLock.
  */
-public class MLockFloat extends MLockData<Float> {
+public final class MLockFloat extends MLockData<Float> {
   /**
    * Constructor.
    *

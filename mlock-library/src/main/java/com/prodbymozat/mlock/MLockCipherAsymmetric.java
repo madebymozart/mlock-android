@@ -36,7 +36,7 @@ import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 
-class MLockCipherAsymmetric extends MLockCipher<KeyStore.PrivateKeyEntry> {
+final class MLockCipherAsymmetric extends MLockCipher<KeyStore.PrivateKeyEntry> {
 
   // Class Constants
   private static final String TAG = MLockCipherAsymmetric.class.getSimpleName();

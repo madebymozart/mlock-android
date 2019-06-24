@@ -35,7 +35,7 @@ import java.util.GregorianCalendar;
 import java.util.Objects;
 import java.util.logging.Level;
 
-public class MLockKeyStoreAsymmetric extends MLockKeyStore<KeyStore.PrivateKeyEntry> {
+final class MLockKeyStoreAsymmetric extends MLockKeyStore<KeyStore.PrivateKeyEntry> {
 
     // Class Constants
     private static final String TAG = MLockKeyStoreAsymmetric.class.getSimpleName();

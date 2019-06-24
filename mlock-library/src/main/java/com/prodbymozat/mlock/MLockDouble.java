@@ -23,9 +23,9 @@
 package com.prodbymozat.mlock;
 
 /**
- * String data model class for MLock. Use this to save a double value in MLock.
+ * Double data model class for MLock. Use this to save a double value in MLock.
  */
-public class MLockDouble extends MLockData<Double> {
+public final class MLockDouble extends MLockData<Double> {
   /**
    * Constructor.
    *

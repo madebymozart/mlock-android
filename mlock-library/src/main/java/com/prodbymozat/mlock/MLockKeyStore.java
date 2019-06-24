@@ -38,7 +38,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class MLockKeyStore<T> {
+abstract class MLockKeyStore<T> {
 
   // Class Constants
   static final String ANDROID_KEY_STORE = "AndroidKeyStore";

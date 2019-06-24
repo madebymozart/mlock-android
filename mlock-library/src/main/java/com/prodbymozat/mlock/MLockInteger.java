@@ -23,9 +23,9 @@
 package com.prodbymozat.mlock;
 
 /**
- * String data model class for MLock. Use this to save a integer value in MLock.
+ * Integer data model class for MLock. Use this to save a integer value in MLock.
  */
-public class MLockInteger extends MLockData<Integer> {
+public final class MLockInteger extends MLockData<Integer> {
   /**
    * Constructor.
    *

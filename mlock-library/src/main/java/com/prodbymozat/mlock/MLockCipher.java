@@ -31,7 +31,7 @@ import javax.crypto.spec.IvParameterSpec;
 import java.security.Key;
 import java.util.logging.Logger;
 
-public abstract class MLockCipher<T> {
+abstract class MLockCipher<T> {
 
   // Class Constants
   static final int GCM_SPEC_LENGTH = 128;

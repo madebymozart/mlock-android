@@ -23,6 +23,7 @@
 package com.prodbymozat.mlock;
 
 import androidx.annotation.Nullable;
+
 /**
  * Interface class defining the method to save and retrieve data from MLock
  */
