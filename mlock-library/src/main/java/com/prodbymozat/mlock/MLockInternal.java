@@ -22,12 +22,10 @@
 
 package com.prodbymozat.mlock;
 
-import com.prodbymozat.mlock.data.MLockDataType;
-
 import java.util.logging.Logger;
 
 /**
- * Internal implementation of MLock. This class contains all the
+ * Internal implementation of {@link MLockInterface
  */
 public class MLockInternal implements MLockInterface {
 
@@ -65,25 +63,25 @@ public class MLockInternal implements MLockInterface {
   }
 
   /**
-   * Methods from {@link MLockInternal} start.
+   * Methods from {@link MLockInterface}.
    */
   @Override
-  public void commit(String key, MLockDataType data) {
+  public void commit(String key, MLockData data) {
 
   }
 
   @Override
-  public void apply(String key, MLockDataType data) {
+  public void apply(String key, MLockData data) {
 
   }
 
   @Override
-  public MLockDataType get(String key) {
+  public MLockData get(String key) {
     return null;
   }
 
   @Override
-  public void get(String key, MLockAsyncRetrieveListener listener) {
+  public void retrieve(String key, MLockAsyncRetrieveListener listener) {
 
   }
 }

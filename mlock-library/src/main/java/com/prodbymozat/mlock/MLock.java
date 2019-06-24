@@ -25,7 +25,6 @@ package com.prodbymozat.mlock;
 import android.app.Application;
 import android.content.Context;
 import androidx.annotation.Nullable;
-import com.prodbymozat.mlock.data.MLockDataType;
 import com.prodbymozat.mlock.exceptions.MLockException;
 import com.prodbymozat.mlock.exceptions.MLockInitializedException;
 import com.prodbymozat.mlock.exceptions.MLockInvalidContextException;
@@ -76,27 +75,27 @@ public final class MLock implements MLockInterface {
   }
 
   /**
-   * Methods from {@link MLockInternal} start.
+   * Methods from {@link MLockInterface} start.
    */
   @Override
-  public void commit(String key, MLockDataType data) {
+  public void commit(String key, MLockData data) {
     internal.commit(key, data);
   }
 
   @Override
-  public void apply(String key, MLockDataType data) {
+  public void apply(String key, MLockData data) {
     internal.apply(key, data);
   }
 
   @Override
   @Nullable
-  public MLockDataType get(String key) {
+  public MLockData get(String key) {
     return internal.get(key);
   }
 
   @Override
-  public void get(String key, MLockAsyncRetrieveListener listener) {
-    internal.get(key, listener);
+  public void retrieve(String key, MLockAsyncRetrieveListener listener) {
+    internal.retrieve(key, listener);
   }
 
   /**

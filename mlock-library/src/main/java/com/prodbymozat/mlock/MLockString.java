@@ -20,17 +20,17 @@
   SOFTWARE.
  */
 
-package com.prodbymozat.mlock.data;
+package com.prodbymozat.mlock;
 
 /**
- * String data model class for MLock. Use this to save a String in MLock
+ * String data model class for MLock. Use this to save a string value in MLock.
  */
-public abstract class MLockString extends MLockDataType<String> {
+public class MLockString extends MLockData<String> {
   /**
    * Constructor.
    *
    * @param key   Key associated with value
-   * @param value Value to be saved. Must be one of the supported types listed in the Javadoc.
+   * @param value Value (String).
    */
   public MLockString(String key, String value) {
     super(key, value);

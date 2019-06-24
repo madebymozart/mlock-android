@@ -23,7 +23,6 @@
 package com.prodbymozat.mlock;
 
 import androidx.annotation.Nullable;
-import com.prodbymozat.mlock.data.MLockDataType;
 /**
  * Interface class defining the method to save and retrieve data from MLock
  */
@@ -32,17 +31,17 @@ interface MLockInterface {
    * Saves a value (Integer) in the MLock encrypted store synchronously.
    *
    * @param key  Key for the value.
-   * @param data Data being saved. Must be one of the supported types listed in {@link MLockDataType}
+   * @param data Data being saved. Must be one of the supported types listed in {@link MLockData}
    */
-  void commit(String key, MLockDataType data);
+  void commit(String key, MLockData data);
 
   /**
    * Saves a value (Integer) in the MLock encrypted store asynchronously.
    *
    * @param key  Key for the value.
-   * @param data Data being saved. Must be one of the supported types listed in {@link MLockDataType}
+   * @param data Data being saved. Must be one of the supported types listed in {@link MLockData}
    */
-  void apply(String key, MLockDataType data);
+  void apply(String key, MLockData data);
 
   /**
    * Retrieves a value in the MLock encrypted store synchronously.
@@ -50,7 +49,7 @@ interface MLockInterface {
    * @param key Key for the value.
    */
   @Nullable
-  MLockDataType get(String key);
+  MLockData get(String key);
 
   /**
    * Retrieves a value (String) in the MLock encrypted store asynchronously.
@@ -58,5 +57,5 @@ interface MLockInterface {
    * @param key      Key for the value.
    * @param listener {@link MLockAsyncRetrieveListener}.
    */
-  void get(String key, MLockAsyncRetrieveListener listener);
+  void retrieve(String key, MLockAsyncRetrieveListener listener);
 }

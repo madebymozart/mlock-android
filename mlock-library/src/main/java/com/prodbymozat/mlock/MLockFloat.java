@@ -23,13 +23,16 @@
 package com.prodbymozat.mlock;
 
 /**
- * Completion listener for {@link MLock#get}
+ * String data model class for MLock. Use this to save a float value in MLock.
  */
-public class MLockAsyncRetrieveListener<T> {
+public class MLockFloat extends MLockData<Float> {
   /**
-   * Completion listener for {@link MLock#get)}.
+   * Constructor.
    *
-   * @param data Data retrieved from MLock
+   * @param key   Key associated with value.
+   * @param value Value (Float).
    */
-  void onDataRetrieved(MLockData<T> data) {}
+  public MLockFloat(String key, Float value) {
+    super(key, value);
+  }
 }

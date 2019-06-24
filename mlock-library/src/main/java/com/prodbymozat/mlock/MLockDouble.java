@@ -23,13 +23,16 @@
 package com.prodbymozat.mlock;
 
 /**
- * Completion listener for {@link MLock#get}
+ * String data model class for MLock. Use this to save a double value in MLock.
  */
-public class MLockAsyncRetrieveListener<T> {
+public class MLockDouble extends MLockData<Double> {
   /**
-   * Completion listener for {@link MLock#get)}.
+   * Constructor.
    *
-   * @param data Data retrieved from MLock
+   * @param key   Key associated with value.
+   * @param value Value (Double).
    */
-  void onDataRetrieved(MLockData<T> data) {}
+  public MLockDouble(String key, Double value) {
+    super(key, value);
+  }
 }

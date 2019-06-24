@@ -20,50 +20,19 @@
   SOFTWARE.
  */
 
-package com.prodbymozat.mlock.data;
+package com.prodbymozat.mlock;
 
-import java.util.Date;
 /**
- * Bade Data model class for MLock, Containing the key, value and date the object was first created.
- * <p>
- * These are the supported data types for MLock:
- * <ul>
- * <li>Integer
- * <li>Float
- * <li>Double
- * <li>String
- * </ul>
- * </p>
+ * String data model class for MLock. Use this to save a integer value in MLock.
  */
-public abstract class MLockDataType<T> {
-
-  private String key;
-
-  private T value;
-
-  private Date date;
-
+public class MLockInteger extends MLockData<Integer> {
   /**
    * Constructor.
    *
-   * @param key   Key associated with value
-   * @param value Value to be saved. Must be one of the supported types listed in the Javadoc.
+   * @param key   Key associated with value.
+   * @param value Value (Integer).
    */
-  public MLockDataType(String key, T value) {
-    this.key = key;
-    this.value = value;
-    this.date = new Date();
-  }
-
-  public String getKey() {
-    return key;
-  }
-
-  public T getValue() {
-    return value;
-  }
-
-  public Date getDate() {
-    return date;
+  public MLockInteger(String key, Integer value) {
+    super(key, value);
   }
 }

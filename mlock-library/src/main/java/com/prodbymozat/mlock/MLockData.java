@@ -22,14 +22,56 @@
 
 package com.prodbymozat.mlock;
 
+import java.util.Date;
 /**
- * Completion listener for {@link MLock#get}
+ * Bade Data model class for MLock, Containing the key, value and date the object was first created.
+ * <p>
+ * These are the supported data types for MLock:
+ * <ul>
+ * <li>Integer
+ * <li>Float
+ * <li>Double
+ * <li>String
+ * </ul>
+ * </p>
  */
-public class MLockAsyncRetrieveListener<T> {
+abstract class MLockData<T> {
   /**
-   * Completion listener for {@link MLock#get)}.
-   *
-   * @param data Data retrieved from MLock
+   * Key for the key/pair value.
    */
-  void onDataRetrieved(MLockData<T> data) {}
+  private String key;
+
+  /**
+   * Value for the key/pair value.
+   */
+  private T value;
+
+  /**
+   * Data of the data type creation.
+   */
+  private Date date;
+
+  /**
+   * Constructor.
+   *
+   * @param key   Key associated with value
+   * @param value Value to be saved. Must be one of the supported types listed in the Javadoc.
+   */
+  MLockData(String key, T value) {
+    this.key = key;
+    this.value = value;
+    this.date = new Date();
+  }
+
+  public String getKey() {
+    return key;
+  }
+
+  public T getValue() {
+    return value;
+  }
+
+  public Date getDate() {
+    return date;
+  }
 }
