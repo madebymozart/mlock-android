@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 /**
  * Internal implementation of {@link MLockInterface
  */
-final class MLockInternal implements MLockInterface {
+class MLockInternal implements MLockInterface {
 
   // Class Constants
   private static final String TAG = MLock.class.getSimpleName();

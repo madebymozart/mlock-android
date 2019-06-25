@@ -37,66 +37,66 @@ import java.util.logging.Level;
 
 final class MLockKeyStoreAsymmetric extends MLockKeyStore<KeyStore.PrivateKeyEntry> {
 
-    // Class Constants
-    private static final String TAG = MLockKeyStoreAsymmetric.class.getSimpleName();
+  // Class Constants
+  private static final String TAG = MLockKeyStoreAsymmetric.class.getSimpleName();
 
-    /**
-     * {@link Context}. Should be application context.
-     */
-    private Context context;
+  /**
+   * {@link Context}. Should be application context.
+   */
+  private Context context;
 
-    /**
-     * Constructor.
-     */
-    MLockKeyStoreAsymmetric(@NonNull Context context) {
-        super(TAG);
-        this.context = context;
+  /**
+   * Constructor.
+   */
+  MLockKeyStoreAsymmetric(@NonNull Context context) {
+    super(TAG);
+    this.context = context;
+  }
+
+  /**
+   * @see MLockKeyStore#generateKey
+   */
+  @Override
+  public KeyStore.PrivateKeyEntry generateKey(@NonNull String alias) {
+    try {
+      final KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", ANDROID_KEY_STORE);
+
+      // Set Calenders
+      final Calendar start = new GregorianCalendar();
+      final Calendar end = new GregorianCalendar();
+      end.add(Calendar.ERA, 1);
+
+      generator.initialize(new KeyPairGeneratorSpec.Builder(context)
+          .setAlias(alias)
+          .setSubject(new X500Principal("CN=" + alias))
+          .setSerialNumber(BigInteger.valueOf(1000))
+          .setStartDate(start.getTime())
+          .setEndDate(end.getTime())
+          .build());
+
+      // Generating the keypair will also store it in the AndroidKeyStore, so we can retrieve a
+      // KeyStore.PrivateKeyEntry afterwards.
+      generator.genKeyPair();
+
+      return getKey(alias);
+    } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException e) {
+      logger.log(Level.WARNING, "Could not generate symmetric key: " + e.getMessage());
+      return null;
     }
+  }
 
-    /**
-     * @see MLockKeyStore#generateKey
-     */
-    @Override
-    public KeyStore.PrivateKeyEntry generateKey(@NonNull String alias) {
-        try {
-            final KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", ANDROID_KEY_STORE);
-
-            // Set Calenders
-            final Calendar start = new GregorianCalendar();
-            final Calendar end = new GregorianCalendar();
-            end.add(Calendar.ERA, 1);
-
-            generator.initialize(new KeyPairGeneratorSpec.Builder(context)
-                    .setAlias(alias)
-                    .setSubject(new X500Principal("CN=" + alias))
-                    .setSerialNumber(BigInteger.valueOf(1000))
-                    .setStartDate(start.getTime())
-                    .setEndDate(end.getTime())
-                    .build());
-
-            // Generating the keypair will also store it in the AndroidKeyStore, so we can retrieve a
-            // KeyStore.PrivateKeyEntry afterwards.
-            generator.genKeyPair();
-
-            return getKey(alias);
-        } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException e) {
-            logger.log(Level.WARNING, "Could not generate symmetric key: " + e.getMessage());
-            return null;
-        }
+  /**
+   * @see MLockKeyStore#getKey
+   */
+  @Nullable
+  @Override
+  public KeyStore.PrivateKeyEntry getKey(@NonNull String alias) {
+    try {
+      return (KeyStore.PrivateKeyEntry) Objects.requireNonNull(getKeyStore()).getEntry(alias, null);
+    } catch (UnrecoverableEntryException | NoSuchAlgorithmException |
+        KeyStoreException e) {
+      logger.log(Level.WARNING, "Could not get key " + alias + " from the KeyStore: " + e.getMessage());
+      return null;
     }
-
-    /**
-     * @see MLockKeyStore#getKey
-     */
-    @Nullable
-    @Override
-    public KeyStore.PrivateKeyEntry getKey(@NonNull String alias) {
-        try {
-            return (KeyStore.PrivateKeyEntry) Objects.requireNonNull(getKeyStore()).getEntry(alias, null);
-        } catch (UnrecoverableEntryException | NoSuchAlgorithmException |
-                KeyStoreException e) {
-            logger.log(Level.WARNING, "Could not get key " + alias + " from the KeyStore: " + e.getMessage());
-            return null;
-        }
-    }
+  }
 }

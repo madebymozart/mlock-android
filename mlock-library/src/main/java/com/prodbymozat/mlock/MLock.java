@@ -27,75 +27,61 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 import com.prodbymozat.mlock.exceptions.MLockException;
 import com.prodbymozat.mlock.exceptions.MLockInitializedException;
-import com.prodbymozat.mlock.exceptions.MLockInvalidContextException;
 
 /**
  * Entry point class into the MLock Library.
  */
-public final class MLock implements MLockInterface {
+public final class MLock {
   /**
    * {@link MLockInternal}.
    */
-  private static volatile MLockInternal internal = null;
+  static volatile MLockInternal internal = null;
 
   /**
    * Initializes the MLock Library.
    *
-   * @param context  Application context. use `getApplicationContext()` method.
+   * @param context  Application context. Use `getApplicationContext()` method.
    * @param listener {@link OnInitializeListener}. required to implement in case an exception is caught
    */
   public static void init(Context context, OnInitializeListener listener) {
-    final MLockException exception = check(context);
-    if (exception != null) {
+    if (internal != null) {
       listener.onComplete(new MLockInitializedException());
       return;
     }
 
+    // Assure MLock is using the Application context and not an activity one.
+    final Context ctx = context instanceof Application ? context : context.getApplicationContext();
+
     // Initialize MLockInternal
     internal = new MLockInternal(MLockCipher.getInstance(),
-        MLockKeyStore.getInstance(context), new MLockNative());
+        MLockKeyStore.getInstance(ctx), new MLockNative());
 
     // Complete Listener
     listener.onComplete(null);
   }
 
-  /**
-   * A pre-initialization method check method before initialization of the MLock.
-   */
-  @Nullable
-  private static MLockException check(Context context) {
-    // assure MLock has not already been initialized.
-    if (internal != null) return new MLockInitializedException();
-
-    // Assure context is from the `Application` class
-    if (!(context instanceof Application)) return new MLockInvalidContextException();
-
-    // All check pass, return null
-    return null;
-  }
-
-  /**
-   * Methods from {@link MLockInterface} start.
-   */
-  @Override
-  public void commit(String key, MLockData data) {
+  public static void commit(String key, MLockData data) {
     internal.commit(key, data);
   }
 
-  @Override
-  public void apply(String key, MLockData data) {
+  public static void apply(String key, MLockData data) {
     internal.apply(key, data);
   }
 
-  @Override
   @Nullable
-  public MLockData get(String key) {
+  public static MLockData get(String key) {
     return internal.get(key);
   }
 
-  @Override
-  public void retrieve(String key, MLockAsyncRetrieveListener listener) {
+  public static void retrieve(String key, MLockAsyncRetrieveListener listener) {
     internal.retrieve(key, listener);
+  }
+
+  /**
+   * Resets MLock to be reinitialized.
+   */
+  public static void reset() {
+    internal = null;
   }
 
   /**

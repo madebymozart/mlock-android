@@ -38,49 +38,49 @@ import java.util.logging.Level;
 @TargetApi(Build.VERSION_CODES.M)
 final class MLockKeyStoreSymmetric extends MLockKeyStore<SecretKey> {
 
-    // Class Constants
-    private static final String TAG = MLockKeyStoreSymmetric.class.getSimpleName();
+  // Class Constants
+  private static final String TAG = MLockKeyStoreSymmetric.class.getSimpleName();
 
-    /**
-     * Constructor.
-     */
-    MLockKeyStoreSymmetric() {
-        super(TAG);
+  /**
+   * Constructor.
+   */
+  MLockKeyStoreSymmetric() {
+    super(TAG);
+  }
+
+  /**
+   * @see MLockKeyStore#generateKey
+   */
+  @Override
+  public final SecretKey generateKey(@NonNull String alias) {
+    try {
+      final KeyGenerator keyGenerator =
+          KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE);
+
+      keyGenerator.init(new KeyGenParameterSpec.Builder(alias,
+          KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
+          .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+          .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+          .build());
+
+      return keyGenerator.generateKey();
+    } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException e) {
+      logger.log(Level.WARNING, "Could not generate symmetric key: " + e.getMessage());
+      return null;
     }
+  }
 
-    /**
-     * @see MLockKeyStore#generateKey
-     */
-    @Override
-    public final SecretKey generateKey(@NonNull String alias) {
-        try {
-            final KeyGenerator keyGenerator =
-                    KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE);
-
-            keyGenerator.init(new KeyGenParameterSpec.Builder(alias,
-                    KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
-                    .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                    .build());
-
-            return keyGenerator.generateKey();
-        } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException e) {
-            logger.log(Level.WARNING, "Could not generate symmetric key: " + e.getMessage());
-            return null;
-        }
+  /**
+   * @see MLockKeyStore#getKey
+   */
+  @Nullable
+  @Override
+  public SecretKey getKey(@NonNull String alias) {
+    try {
+      return (SecretKey) Objects.requireNonNull(getKeyStore()).getKey(alias, null);
+    } catch (UnrecoverableKeyException | NoSuchAlgorithmException | KeyStoreException e) {
+      logger.log(Level.WARNING, "Could not get key " + alias + " from the KeyStore: " + e.getMessage());
     }
-
-    /**
-     * @see MLockKeyStore#getKey
-     */
-    @Nullable
-    @Override
-    public SecretKey getKey(@NonNull String alias) {
-        try {
-            return (SecretKey) Objects.requireNonNull(getKeyStore()).getKey(alias, null);
-        } catch (UnrecoverableKeyException | NoSuchAlgorithmException | KeyStoreException e) {
-            logger.log(Level.WARNING, "Could not get key " + alias + " from the KeyStore: " + e.getMessage());
-        }
-        return null;
-    }
+    return null;
+  }
 }
