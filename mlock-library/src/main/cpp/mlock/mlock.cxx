@@ -27,9 +27,9 @@
  */
 #include "mlock.hxx"
 
-MLock::MLock() {}
+MLock::MLock() = default;
 
-MLock::~MLock() {}
+MLock::~MLock() = default;
 
 void MLock::initDatabase() {}
 
