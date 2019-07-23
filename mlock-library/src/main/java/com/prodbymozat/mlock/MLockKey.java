@@ -86,8 +86,6 @@ public class MLockKey {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
-
         return key;
     }
 }
