@@ -116,7 +116,7 @@ public class MLockUnitTest {
     public void apply_shouldCallInternalApply() {
         // Arrange
         MLock.internal = mock(MLockInternal.class);
-        final MLockData data = mock(MLockData.class);
+        final MLockData<?> data = mock(MLockData.class);
 
         // Act
         MLock.apply(TEST_KEY, data);
@@ -141,7 +141,7 @@ public class MLockUnitTest {
     public void retrieve_shouldCallInternalRetrieve() {
         // Arrange
         MLock.internal = mock(MLockInternal.class);
-        final MLockAsyncRetrieveListener retrieveListener = mock(MLockAsyncRetrieveListener.class);
+        final MLockAsyncRetrieveListener<?> retrieveListener = mock(MLockAsyncRetrieveListener.class);
 
         // Act
         MLock.retrieve(TEST_KEY, retrieveListener);

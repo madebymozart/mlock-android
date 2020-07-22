@@ -43,7 +43,7 @@ public class MLockCipherTest {
     /**
      * {@link MLockKeyStore}
      */
-    private MLockKeyStore mLockKeyStore;
+    private MLockKeyStore<?> mLockKeyStore;
 
     /**
      * {@link MLockCipher}

@@ -47,7 +47,7 @@ public class MLockKeyStoreTest {
     /**
      * {@link MLockKeyStore}
      */
-    private MLockKeyStore mLockKeyStore;
+    private MLockKeyStore<?> mLockKeyStore;
 
     @Before
     public void setUp() {
@@ -93,7 +93,7 @@ public class MLockKeyStoreTest {
     public void getKey_generatedKeyPersistsUponNewInstance() {
         // Arrange, Using 2 different instances of the MLockKeyStore Class
         mLockKeyStore.generateKey(TEST_ALIAS);
-        final MLockKeyStore mLockKeyStore2 = MLockKeyStore.getInstance(getInstrumentation().getContext());
+        final MLockKeyStore<?> mLockKeyStore2 = MLockKeyStore.getInstance(getInstrumentation().getContext());
 
         // Act
         final Object generatedKey = mLockKeyStore.getKey(TEST_ALIAS);
