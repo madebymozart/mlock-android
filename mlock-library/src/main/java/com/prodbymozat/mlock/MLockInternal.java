@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Mozart Alexander Louis
+ * Copyright (c) 2020 Mozart Alexander Louis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,12 +40,12 @@ class MLockInternal implements MLockInterface {
     /**
      * {@link MLockCipher}
      */
-    private final MLockCipher cipher;
+    private final MLockCipher<?> cipher;
 
     /**
      * {@link MLockKeyStore}
      */
-    private final MLockKeyStore keyStore;
+    private final MLockKeyStore<?> keyStore;
 
     /**
      * {@link MLockNative}
@@ -55,7 +55,7 @@ class MLockInternal implements MLockInterface {
     /**
      * Constructor
      */
-    MLockInternal(MLockCipher cipher, MLockKeyStore keyStore, MLockNative lockNative) {
+    MLockInternal(MLockCipher<?> cipher, MLockKeyStore<?> keyStore, MLockNative lockNative) {
         this.logger = Logger.getLogger(TAG);
         this.cipher = cipher;
         this.keyStore = keyStore;
@@ -66,22 +66,22 @@ class MLockInternal implements MLockInterface {
      * Methods from {@link MLockInterface}.
      */
     @Override
-    public void commit(String key, MLockData data) {
+    public void commit(String key, MLockData<?> data) {
 
     }
 
     @Override
-    public void apply(String key, MLockData data) {
+    public void apply(String key, MLockData<?> data) {
 
     }
 
     @Override
-    public MLockData get(String key) {
+    public MLockData<?> get(String key) {
         return null;
     }
 
     @Override
-    public void retrieve(String key, MLockAsyncRetrieveListener listener) {
+    public void retrieve(String key, MLockAsyncRetrieveListener<?> listener) {
 
     }
 }

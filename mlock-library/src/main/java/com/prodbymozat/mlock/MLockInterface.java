@@ -34,7 +34,7 @@ interface MLockInterface {
      * @param key  Key for the value.
      * @param data Data being saved. Must be one of the supported types listed in {@link MLockData}
      */
-    void commit(String key, MLockData data);
+    void commit(String key, MLockData<?> data);
 
     /**
      * Saves a value (Integer) in the MLock encrypted store asynchronously.
@@ -42,7 +42,7 @@ interface MLockInterface {
      * @param key  Key for the value.
      * @param data Data being saved. Must be one of the supported types listed in {@link MLockData}
      */
-    void apply(String key, MLockData data);
+    void apply(String key, MLockData<?> data);
 
     /**
      * Retrieves a value in the MLock encrypted store synchronously.
@@ -50,7 +50,7 @@ interface MLockInterface {
      * @param key Key for the value.
      */
     @Nullable
-    MLockData get(String key);
+    MLockData<?> get(String key);
 
     /**
      * Retrieves a value (String) in the MLock encrypted store asynchronously.
@@ -58,5 +58,5 @@ interface MLockInterface {
      * @param key      Key for the value.
      * @param listener {@link MLockAsyncRetrieveListener}.
      */
-    void retrieve(String key, MLockAsyncRetrieveListener listener);
+    void retrieve(String key, MLockAsyncRetrieveListener<?> listener);
 }

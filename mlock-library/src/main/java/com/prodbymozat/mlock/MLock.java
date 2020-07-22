@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Mozart Alexander Louis
+ * Copyright (c) 2020 Mozart Alexander Louis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,20 +62,20 @@ public final class MLock {
         listener.onComplete(null);
     }
 
-    public static void commit(String key, MLockData data) {
+    public static void commit(String key, MLockData<?> data) {
         internal.commit(key, data);
     }
 
-    public static void apply(String key, MLockData data) {
+    public static void apply(String key, MLockData<?> data) {
         internal.apply(key, data);
     }
 
     @Nullable
-    public static MLockData get(String key) {
+    public static MLockData<?> get(String key) {
         return internal.get(key);
     }
 
-    public static void retrieve(String key, MLockAsyncRetrieveListener listener) {
+    public static void retrieve(String key, MLockAsyncRetrieveListener<?> listener) {
         internal.retrieve(key, listener);
     }
 

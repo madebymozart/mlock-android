@@ -2,6 +2,9 @@
 *.apk
 *.ap_
 
+#Cxx Folder
+.cxx/
+
 # Files for the ART/Dalvik VM
 *.dex
 
